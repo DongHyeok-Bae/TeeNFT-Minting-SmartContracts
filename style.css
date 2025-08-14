@@ -1,0 +1,366 @@
+/* 기본 스타일 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 헤더 스타일 */
+header {
+    background: #fff;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 a {
+    text-decoration: none;
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#wallet-info button {
+    padding: 10px 15px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#wallet-info button:disabled {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+#wallet-address {
+    margin-right: 15px;
+    font-family: monospace;
+    background-color: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+
+/* 카드 스타일 */
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* 폼 스타일 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+#mint-status {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+/* 컬렉션 섹션 */
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filters button {
+    padding: 8px 12px;
+    margin-left: 10px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filters button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+#loading-indicator {
+    color: #6c757d;
+}
+
+/* 푸터 */
+footer {
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 40px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* NFT 카드 스타일 */
+.nft-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.nft-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.nft-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+
+.nft-info {
+    padding: 20px;
+}
+
+.nft-name {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.nft-owner {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 10px 0;
+    word-break: break-all;
+}
+
+.nft-price {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.nft-status .status-redeemable {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.nft-status .status-redeemed {
+    color: #c62828;
+    background-color: #ffebee;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 13px;
+    display: inline-block;
+}
+
+
+/* --- 모달 스타일 --- */
+.hidden {
+    display: none !important;
+}
+
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#modal-content {
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 30px;
+}
+
+#modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #888;
+}
+
+#modal-body {
+    display: flex;
+    gap: 30px;
+}
+
+#modal-nft-image {
+    width: 40%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    align-self: flex-start;
+}
+
+.modal-info {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-info h2 {
+    margin-top: 0;
+}
+
+.modal-info hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.info-grid p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.info-grid .address {
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.ipfs-link {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.ipfs-link:hover {
+    text-decoration: underline;
+}
+
+#modal-action-area {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+#redeem-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#redeem-btn:hover {
+    background-color: #218838;
+}
+
+#redeem-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#redeem-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    #modal-body {
+        flex-direction: column;
+    }
+    #modal-nft-image, .modal-info {
+        width: 100%;
+    }
+}

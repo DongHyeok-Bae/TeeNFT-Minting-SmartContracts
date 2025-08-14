@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeeNFT - Vite Edition</title>
+    <!-- *** 변경점: CSS 링크 태그를 완전히 삭제합니다. *** -->
+    <!-- Vite가 main.js의 import 구문을 통해 자동으로 스타일을 적용합니다. -->
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1><a href="/">TeeNFT</a></h1>
+            <div id="wallet-info">
+                <span id="wallet-address"></span>
+                <button id="connect-wallet-btn">지갑 연결하기</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="mint-section" class="card">
+            <h2>나만의 티셔츠 NFT 발행하기</h2>
+            <form id="mint-form">
+                <div class="form-group">
+                    <label for="nft-image">디자인 이미지:</label>
+                    <input type="file" id="nft-image" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="nft-name">NFT 이름:</label>
+                    <input type="text" id="nft-name" placeholder="예: My Awesome Tee" required>
+                </div>
+                <div class="form-group">
+                    <label for="nft-price">가격 (ETH):</label>
+                    <input type="number" id="nft-price" step="0.001" min="0" placeholder="예: 0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="nft-description">NFT 설명:</label>
+                    <textarea id="nft-description" rows="3" placeholder="예: 세상에 단 하나뿐인 나만의 디자인" required></textarea>
+                </div>
+                <button type="submit" id="mint-btn">NFT 발행하기</button>
+            </form>
+            <div id="mint-status"></div>
+        </section>
+
+        <section id="collection-section">
+            <div class="collection-header">
+                <h2>NFT 컬렉션</h2>
+                <div class="filters">
+                    <button id="show-all-btn" class="active">전체 보기</button>
+                    <button id="show-my-btn">내 컬렉션 보기</button>
+                </div>
+            </div>
+            <div id="nft-list" class="grid-container">
+                <p id="loading-indicator">NFT 목록을 불러오는 중...</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content" class="card">
+            <button id="modal-close-btn">&times;</button>
+            <div id="modal-body">
+                <img id="modal-nft-image" src="" alt="NFT Image" class="nft-image">
+                <div class="modal-info">
+                    <h2 id="modal-nft-name"></h2>
+                    <p id="modal-nft-description"></p>
+                    <hr>
+                    <div class="info-grid">
+                        <p><strong>Token ID:</strong> <span id="modal-token-id"></span></p>
+                        <p><strong>가격:</strong> <span id="modal-nft-price"></span> ETH</p>
+                        <p><strong>상태:</strong> <span id="modal-nft-status"></span></p>
+                        <p><strong>제작자:</strong> <span id="modal-creator-address" class="address"></span></p>
+                        <p><strong>소유자:</strong> <span id="modal-owner-address" class="address"></span></p>
+                        <p><strong>생성일:</strong> <span id="modal-created-at"></span></p>
+                    </div>
+                    <a id="modal-ipfs-link" href="#" target="_blank" class="ipfs-link">IPFS에서 원본 데이터 보기</a>
+                    <div id="modal-action-area">
+                        <button id="redeem-btn" class="hidden">실물 티셔츠로 교환하기</button>
+                        <p id="redeem-status"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 구매 기능 전까지 구현 완료!</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>
