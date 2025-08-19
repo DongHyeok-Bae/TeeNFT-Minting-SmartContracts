@@ -3,7 +3,7 @@ import { Alchemy, Network } from 'alchemy-sdk';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import config from './config.js';
-import './style.css'; // *** 변경점: CSS 파일을 JavaScript에서 직접 import 합니다. ***
+import './style.css';
 
 // --- 전역 변수 ---
 let provider;
@@ -13,7 +13,6 @@ let contract;
 let alchemy;
 
 // --- DOM 요소 ---
-// 기존 요소
 const connectWalletBtn = document.getElementById('connect-wallet-btn');
 const walletAddressSpan = document.getElementById('wallet-address');
 const mintForm = document.getElementById('mint-form');
@@ -23,8 +22,6 @@ const nftListDiv = document.getElementById('nft-list');
 const loadingIndicator = document.getElementById('loading-indicator');
 const showAllBtn = document.getElementById('show-all-btn');
 const showMyBtn = document.getElementById('show-my-btn');
-
-// *** 추가점: 모달 관련 DOM 요소 ***
 const modalOverlay = document.getElementById('modal-overlay');
 const modalCloseBtn = document.getElementById('modal-close-btn');
 const modalNftImage = document.getElementById('modal-nft-image');
@@ -39,6 +36,8 @@ const modalCreatedAt = document.getElementById('modal-created-at');
 const modalIpfsLink = document.getElementById('modal-ipfs-link');
 const redeemBtn = document.getElementById('redeem-btn');
 const redeemStatus = document.getElementById('redeem-status');
+// [추가] 구매하기 버튼 DOM 요소 가져오기
+const buyBtn = document.getElementById('buy-btn');
 
 
 function initialize() {
@@ -57,7 +56,6 @@ function initialize() {
     showAllBtn.addEventListener('click', () => loadNFTs('all'));
     showMyBtn.addEventListener('click', () => loadNFTs('my'));
 
-    // *** 추가점: 모달 닫기 이벤트 리스너 ***
     modalCloseBtn.addEventListener('click', () => modalOverlay.classList.add('hidden'));
     modalOverlay.addEventListener('click', (event) => {
         if (event.target === modalOverlay) {
@@ -147,6 +145,7 @@ async function mintNFT(event) {
         
         const priceInWei = ethers.parseEther(price);
 
+        // [수정] safeMint의 첫번째 인자를 currentAccount로 전달하여, 발행하는 사람의 소유로 NFT가 생성되도록 합니다.
         const tx = await contractWithSigner.safeMint(currentAccount, metadataIpfsUrl, priceInWei);
         
         updateMintStatus("4. 블록체인에 기록 중입니다...");
@@ -236,9 +235,9 @@ async function fetchNFTData(alchemyNFT) {
             owner,
             creator: teeNFTData.creator,
             createdAt: new Date(Number(teeNFTData.createdAt) * 1000).toLocaleDateString(),
-            status: teeNFTData.status === 0n ? '교환 가능' : '교환 완료', // 0n은 BigInt 0을 의미
-            price: ethers.formatEther(teeNFTData.price), // wei 단위를 ETH 단위 문자열로 변환
-            tokenUri: alchemyNFT.tokenUri // IPFS 링크를 위해 추가
+            status: teeNFTData.status === 0n ? '교환 가능' : '교환 완료',
+            price: ethers.formatEther(teeNFTData.price),
+            tokenUri: alchemyNFT.tokenUri
         };
     } catch (error) {
         console.error(`Token ID ${alchemyNFT.tokenId}의 데이터를 가져오는 데 실패했습니다:`, error);
@@ -274,7 +273,6 @@ async function showNFTDetail(nft) {
     modalOwnerAddress.textContent = nft.owner;
     modalCreatedAt.textContent = nft.createdAt;
 
-    // IPFS 링크 설정
     if (nft.tokenUri) {
         const ipfsGatewayUrl = nft.tokenUri.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
         modalIpfsLink.href = ipfsGatewayUrl;
@@ -283,16 +281,30 @@ async function showNFTDetail(nft) {
         modalIpfsLink.style.display = 'none';
     }
 
-    // 교환 버튼 로직
+    // [수정] 교환 및 구매 버튼 로직 전체 수정
     redeemStatus.textContent = '';
     redeemBtn.classList.add('hidden');
-    redeemBtn.onclick = null; 
+    buyBtn.classList.add('hidden');
+    redeemBtn.onclick = null;
+    buyBtn.onclick = null;
 
-    if (nft.owner === currentAccount && nft.status === '교환 가능') {
+    // 현재 지갑 주소와 NFT 소유자 주소를 소문자로 변환하여 비교 (정확성 향상)
+    const isOwner = currentAccount && nft.owner.toLowerCase() === currentAccount.toLowerCase();
+
+    // 조건 1: 내가 소유자이고, 교환 가능한 상태일 때 '교환' 버튼 표시
+    if (isOwner && nft.status === '교환 가능') {
         redeemBtn.classList.remove('hidden');
         redeemBtn.disabled = false;
         redeemBtn.textContent = '실물 티셔츠로 교환하기';
         redeemBtn.onclick = () => redeemNFT(nft.tokenId);
+    }
+    
+    // 조건 2: 내가 소유자가 아닐 때 '구매' 버튼 표시
+    if (!isOwner) {
+        buyBtn.classList.remove('hidden');
+        buyBtn.disabled = false;
+        buyBtn.textContent = `${nft.price} ETH에 구매하기`;
+        buyBtn.onclick = () => buyNFT(nft);
     }
 
     modalOverlay.classList.remove('hidden');
@@ -317,6 +329,36 @@ async function redeemNFT(tokenId) {
         alert(`❌ 교환에 실패했습니다: ${error.reason || error.message}`);
         redeemStatus.textContent = `오류: ${error.reason || error.message}`;
         redeemBtn.disabled = false;
+    }
+}
+
+// [추가] NFT 구매를 처리하는 새로운 함수
+async function buyNFT(nft) {
+    buyBtn.disabled = true;
+    redeemStatus.textContent = '구매 처리 중... MetaMask를 확인해주세요.';
+
+    try {
+        const contractWithSigner = contract.connect(signer);
+        // 가격을 문자열(ETH 단위)에서 BigInt(wei 단위)로 변환
+        const priceInWei = ethers.parseEther(nft.price);
+
+        // 스마트 컨트랙트의 purchase 함수를 호출하며, value로 NFT 가격을 함께 전송
+        const tx = await contractWithSigner.purchase(nft.tokenId, { value: priceInWei });
+        
+        redeemStatus.textContent = '블록체인에 기록 중입니다...';
+        await tx.wait();
+
+        alert('✅ 구매가 성공적으로 완료되었습니다!');
+        modalOverlay.classList.add('hidden');
+        // NFT 목록을 새로고침하여 소유권 변경을 반영
+        await loadNFTs(showAllBtn.classList.contains('active') ? 'all' : 'my');
+
+    } catch (error) {
+        console.error("구매 실패:", error);
+        const errorMessage = error.reason || error.message;
+        alert(`❌ 구매에 실패했습니다: ${errorMessage}`);
+        redeemStatus.textContent = `오류: ${errorMessage}`;
+        buyBtn.disabled = false; // 실패 시 버튼을 다시 활성화
     }
 }
 

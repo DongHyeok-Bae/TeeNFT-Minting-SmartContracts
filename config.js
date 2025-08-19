@@ -4,7 +4,7 @@
 // Vite 환경에서는 이 객체를 export하여 다른 파일에서 import해서 사용합니다.
 const config = {
     // 1. 스마트 컨트랙트 주소
-    contractAddress: "0x9113A563A2eaBB6a4068275D3e9A343C5B765584",
+    contractAddress: "0xcF24c48A325bE469d51a2EFe14D7aDd0a2ADCB66",
 
     // 2. Pinata API 키 (JWT)
     // 주의: 이 키는 Vite 개발 서버에서는 노출되지 않지만,
@@ -435,6 +435,19 @@ const config = {
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "purchase",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
