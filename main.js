@@ -41,6 +41,7 @@ const buyBtn = document.getElementById('buy-btn');
 
 
 function initialize() {
+    console.log("현재 적용된 컨트랙트 주소:", config.contractAddress);
     console.log("페이지 초기화 시작됨.");
 
     const settings = {
