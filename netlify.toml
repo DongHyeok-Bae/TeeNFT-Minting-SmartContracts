@@ -1,15 +1,6 @@
-# Netlify 빌드 설정 파일
-# 이 파일은 Netlify UI의 설정보다 우선 적용됩니다.
+# Netlify 빌드 설정 파일 (단순화된 최종 버전)
 
 [build]
-  # 빌드 명령어를 명확히 지정합니다.
+  # 빌드 명령어와 결과물 폴더만 명확히 지정합니다.
   command = "npm run build"
-  
-  # 빌드 결과물이 생성되는 폴더를 명확히 지정합니다.
   publish = "dist"
-
-  # 빌드 환경에 Vite 환경 변수를 주입하도록 명확히 지시합니다.
-  [build.environment]
-    VITE_CONTRACT_ADDRESS = "${VITE_CONTRACT_ADDRESS}"
-    VITE_PINATA_JWT = "${VITE_PINATA_JWT}"
-    VITE_ALCHEMY_API_KEY = "${VITE_ALCHEMY_API_KEY}"
